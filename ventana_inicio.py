@@ -10,7 +10,7 @@ class VentanaInicio:
         SCREEN_WIDTH = 1200
         SCREEN_HEIGHT = 600
 
-        self.inicio_sound = pygame.mixer.Sound("sound/inicio.mp3")
+        self.inicio_sound = pygame.mixer.Sound("sound/inicio.ogg")
         self.sound_timer = time.time()
 
         self.WHITE = (255, 255, 255)

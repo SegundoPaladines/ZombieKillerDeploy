@@ -10,10 +10,10 @@ class Juego:
         self.shooter = shooter
         self.estado = True
 
-        self.juego_sound = pygame.mixer.Sound("sound/juego.mp3")
-        self.zombie_sound = pygame.mixer.Sound("sound/zombie.mp3")
-        self.disparo_sound = pygame.mixer.Sound("sound/disparo.mp3")
-        self.recarga_sound = pygame.mixer.Sound("sound/recarga.mp3")
+        self.juego_sound = pygame.mixer.Sound("sound/juego.ogg")
+        self.zombie_sound = pygame.mixer.Sound("sound/zombie.ogg")
+        self.disparo_sound = pygame.mixer.Sound("sound/disparo.ogg")
+        self.recarga_sound = pygame.mixer.Sound("sound/recarga.ogg")
 
         self.zombie_sound_timer = time.time()
 

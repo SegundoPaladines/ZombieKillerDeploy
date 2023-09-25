@@ -5,7 +5,6 @@ import asyncio
 class VentanaInicio:
     def __init__(self):
         pygame.init()
-        pygame.mixer.init()
 
         # Constantes
         SCREEN_WIDTH = 1200
@@ -108,8 +107,12 @@ class VentanaInicio:
 
     # Función para mostrar la pantalla de inicio
     async def mostrar_pantalla_inicio(self):
-        await self.create_difficulty_buttons()
+        
+        pygame.mixer.stop()
 
+        pygame.mixer.init()
+
+        await self.create_difficulty_buttons()
         self.inicio_sound.play()
         
         while not self.cerrar_ventana:
@@ -149,6 +152,8 @@ class VentanaInicio:
             # Verificar si el usuario presionó Enter y devolver los datos
             if self.entrada:
                 self.inicio_sound.stop()
+
+                await asyncio.sleep(0)
                 return self.entrada
             
             

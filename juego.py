@@ -25,7 +25,9 @@ class Juego:
         self.SCREEN_HEIGHT = 600
 
         self.miraX = 550
-        self.miraY = 200;
+        self.miraY = 200
+
+        self.mira_moving = False
 
         self.mira_img = pygame.image.load("gfx/crosshair.png")
         self.mira_img = pygame.transform.scale(self.mira_img, (50, 50))
@@ -100,7 +102,7 @@ class Juego:
                 self.actualizar_info(ventana)
                 self.tiempo_disparo = 0
 
-    def recargar(self, ventana):
+    async def recargar(self, ventana):
         if self.shooter.municion <= 0:
             if self.recarga_tiempo == 0:
                 self.recarga_tiempo = time.time()
@@ -116,6 +118,8 @@ class Juego:
                 self.actualizar_info(ventana)
             else:
                 self.mostrar_recargando(ventana)
+
+        await asyncio.sleep(0)
 
     def mostrar_recargando(self, ventana):
         font = pygame.font.Font(None, 36)
@@ -224,7 +228,24 @@ class Juego:
             self.juego_sound.play()
             self.principal_sound_timer = time.time()
 
+    async def manejar_eventos(self):
+        while self.estado:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.estado = False
+
+                # Manejar eventos de movimiento de mouse
+                if event.type == pygame.MOUSEMOTION:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    self.miraX, self.miraY = mouse_x, mouse_y
+                    self.mira_moving = True
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.mira_moving = False
+
+            await asyncio.sleep(0)
+
     async def iniciar(self):
+        pygame.mixer.stop()
         pygame.init()
         pygame.mixer.init()
 
@@ -233,6 +254,9 @@ class Juego:
         # Instancia de la ventana
         ventana = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("Zombie Shooter")
+
+        #Crear una tarea asincrónica para manejar eventos de mouse
+        eventos_task = asyncio.create_task(self.manejar_eventos())
 
         while self.estado:
             for event in pygame.event.get():
@@ -261,7 +285,7 @@ class Juego:
 
             self.disparar(ventana)
 
-            self.recargar(ventana)
+            await self.recargar(ventana)
 
             self.actualizar_balas()
 
@@ -274,7 +298,10 @@ class Juego:
             # Actualiza la ventana para mostrar los cambios
             pygame.display.flip()
         
+        await asyncio.sleep(0)
+
         self.juego_sound.stop()
+        pygame.mixer.stop()
         
         pygame.quit()
         return self.shooter.score

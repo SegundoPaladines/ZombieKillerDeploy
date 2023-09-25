@@ -16,6 +16,7 @@ class VentanaFinal:
 
     async def reiniciar(self):
         pygame.init()
+        pygame.mixer.init()
 
         pantalla = pygame.display.set_mode((1200, 600))
         pygame.display.set_caption("Game Over")
@@ -36,6 +37,11 @@ class VentanaFinal:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
+
+                        self.final_sound.stop()
+                        self.inicio_sound.stop()
+                        pygame.mixer.stop()
+
                         pygame.quit()
                         return True  # El usuario presionó ENTER para reiniciar
 
@@ -45,6 +51,8 @@ class VentanaFinal:
             pygame.display.update()
         
             await asyncio.sleep(0)
-
+        
+        await asyncio.sleep(0.1)
         self.final_sound.stop()
         self.inicio_sound.stop()
+        pygame.mixer.stop()
